@@ -1,0 +1,21 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>模拟结果</title>
+</head>
+<body>
+<h1 th:text="${resultMessage}"></h1>
+<br/>
+<br/>
+<h1 th:text="${simulatedHandsResult}"></h1>
+<div th:each="element  : ${simulatedHandsResultList}">
+  <div th:text="${element.handCount}"></div>
+  <div th:text="${element.nhand}"></div>
+　<div th:text="${element.whand}+${element.ehand}"></div>
+  <div th:text="${element.shand}"></div>
+  <div th:text="${element.makable}"></div>
+  <div th:text="${element.space}"></div>
+</div>
+</body>
+</html>

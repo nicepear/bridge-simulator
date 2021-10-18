@@ -1,0 +1,52 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bridge Simulator</title>
+</head>
+<body>
+<h1 th:text="${message}"></h1>
+<form id="bridgeHand"  action="#" th:action="@{/infoResult}" method="post">
+  <p>请选择定约阶数:</p>
+  <!-- th:eachでcolorsの要素分ループをまわす -->
+  <div th:each="contractRank : ${contractRanks}"　 >
+    <input type="radio" name="contractRank" th:value="${contractRank.value}" th:text="${contractRank.value}" th:checked="${contractRank.key == '1'}"/>
+  </div>
+  <p>请选择定约花色:</p>
+  <!-- th:eachでcolorsの要素分ループをます -->
+  <!--
+  <div th:each="contractTrump : ${contractTrumps}"　>
+    <input type="radio name="*{contractTrumpX}" th:value="${contractTrump.value}" th:text="${contractTrump.value}" />
+  </div>
+-->
+  <div>
+    <input type="radio" name="contractTrumpX" value="C"   checked="checked" >♣</input>
+    <input type="radio" name="contractTrumpX" value="D" >🔸</input>
+    <input type="radio" name="contractTrumpX" value="H" >💗</input>
+    <input type="radio" name="contractTrumpX" value="S" >♠</input>
+    <input type="radio" name="contractTrumpX" value="NT" >NT</input>
+  </div>
+  <p>请设置手牌:</p>
+  <p>手牌: <input id="pbncode" type="text" name="pbncode" value="AT5.AJT.A632.KJ7"/></p>
+  <p>(输入顺序为:S.H.D.C 若H为缺门时为S..D.C 若C为缺门时为S.H.D.)
+  <br/>
+  <p>同伴点力范围 <input id="hcpFrom" type="text" name="hcpFrom" value="0" size="1" maxlength="2"/>～<input id="hcpTo" type="text" name="hcpTo" value="" size="1" maxlength="2"/></p>
+
+  <p>请设置同伴花色长度(左侧不能为空)</p>
+  <p>♠ <input id="spadesLengthFrom" type="text" name="spadesLengthFrom" value="0" size="1" maxlength="2"/>～<input id="spadesLengthTo" type="text" name="spadesLengthTo" value="" size="1" maxlength="2"/></p>
+  <p>💗<input id="heartsLengthFrom" type="text" name="heartsLengthFrom" value="0" size="1" maxlength="2"/>～<input id="heartsLengthTo" type="text" name="heartsLengthTo" value="" size="1" maxlength="2"/></p>
+  <p>🔸 <input id="diamondsLengthFrom" type="text" name="diamondsLengthFrom" value="0" size="1" maxlength="2"/>～<input id="diamondsLengthTo" type="text" name="diamondsLengthTo" value="" size="1" maxlength="2"/></p>
+  <p>♣ <input id="clubsLengthFrom" type="text" name="clubsLengthFrom" value="0" size="1" maxlength="2"/>～<input id="clubsLengthTo" type="text" name="clubsLengthTo" value="" size="1" maxlength="2"/>
+
+  <p>请选择同伴手牌牌型</p>
+  <div>
+    <input type="radio" name="partnerHandPattern" value="ANY"   checked="checked" >任意牌型</input>
+    <input type="radio" name="partnerHandPattern" value="BALANCE" >平均牌型(将无视同伴花色长度设置)</input>
+    <input type="radio" name="partnerHandPattern" value="UNBALANCE" >非平均牌型(将无视同伴花色长度设置)</input>
+  </div>
+  <p><input type="submit" value="模拟计算开始" />计算需要时间，请耐心等待不要重复按此按钮</p>
+  <br/>
+  <p><input type="reset" value="重置" /></p>
+</form>
+</body>
+</html>

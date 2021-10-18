@@ -1,0 +1,47 @@
+plugins {
+    id 'org.springframework.boot' version '2.3.2.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+    id 'maven-publish'
+    id 'com.google.cloud.tools.jib' version "2.7.1"
+}
+
+group 'jp.co.rottenpear'
+version '1.0-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact bootJar
+        }
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    implementation 'net.java.dev.jna:jna:5.9.0'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jib {
+    from {
+        image = "docker://spring-boot:base-image"
+    }
+//    container {
+//        jvmFlags = ['-Dcom.amazonaws.xray.configFile=/xray-agent.json', '-javaagent:/xray-agent/disco/disco-java-agent.jar=pluginPath=/xray-agent/disco/disco-plugins']
+//    }
+}
