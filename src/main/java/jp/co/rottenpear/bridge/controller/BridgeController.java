@@ -1,6 +1,7 @@
 package jp.co.rottenpear.bridge.controller;
 
 import ddsjava.dto.CalculateResponse;
+import jp.co.rottenpear.bridge.config.BridgeSimulatorConfig;
 import jp.co.rottenpear.bridge.model.Hand;
 import jp.co.rottenpear.bridge.model.BridgeHand;
 import jp.co.rottenpear.bridge.service.BridgeSimulatorService;
@@ -38,16 +39,7 @@ public class BridgeController {
         contractRanks.put("6", "6");
         contractRanks.put("7", "7");
 
-        Map<String, String> contractTrumps = new LinkedHashMap<String, String>();
-
-        contractTrumps.put("C", "C");
-        contractTrumps.put("D", "D");
-        contractTrumps.put("H", "H");
-        contractTrumps.put("S", "S");
-        contractTrumps.put("NT", "NT");
-
         model.addAttribute("contractRanks", contractRanks);
-        model.addAttribute("contractTrumps", contractTrumps);
         model.addAttribute("message", "欢迎来到桥牌模拟器");
         return "bridgeSimulator";
     }
@@ -206,7 +198,7 @@ public class BridgeController {
         }
 
         List<Hand> calcResults = calculateResponse.getCalculateResults();
-        resultMessage = "模拟计算50次结果:南家为坐庄者时，打成定约" + bridgeHand.getContractRank() + bridgeHand.getContractTrumpX() + "成功率为" + calculateResponse.getProbably() + "%";
+        resultMessage = "模拟计算" + String.valueOf(BridgeSimulatorConfig.gamecount) + "次结果:南家为坐庄者时，打成定约" + bridgeHand.getContractRank() + bridgeHand.getContractTrumpX() + "成功率为" + calculateResponse.getProbably() + "%";
         ModelAndView mv = new ModelAndView("bridgeSimulatorResult");
 
         mv.addObject("resultMessage", resultMessage);

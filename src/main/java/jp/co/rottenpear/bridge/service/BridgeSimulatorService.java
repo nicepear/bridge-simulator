@@ -6,6 +6,7 @@ import bridge.domain.utils.BridgeHelper;
 import ddsjava.DDSConnect;
 import ddsjava.DDSException;
 import ddsjava.dto.CalculateResponse;
+import jp.co.rottenpear.bridge.config.BridgeSimulatorConfig;
 import jp.co.rottenpear.bridge.model.Hand;
 import ddsjava.dto.SimpleCard;
 import jp.co.rottenpear.bridge.model.BridgeCardCompare;
@@ -44,7 +45,7 @@ public class BridgeSimulatorService {
             trump = "NoTrump";
         }
         float probability = 0;
-        int gamecount = 50;
+
         int makecount = 0;
         int count = 0;
 
@@ -55,7 +56,7 @@ public class BridgeSimulatorService {
         DDSConnect dds = new DDSConnect();
 
 
-        for (int i = 0; i < gamecount; i++) {
+        for (int i = 0; i < BridgeSimulatorConfig.gamecount; i++) {
             String pbnCode = generateRemainHands(npbnCode, hcpFromInt, hcpToInt, bridgeHand);
             try {
                 contracts = dds.calcMakableContracts(pbnCode);
@@ -91,7 +92,7 @@ public class BridgeSimulatorService {
                 }
             }
         }
-        probability = makecount * 100 / gamecount;
+        probability = makecount * 100 / BridgeSimulatorConfig.gamecount;
         calculateResponse.setCalculateResults(calcResult);
         calculateResponse.setProbably(String.valueOf(probability));
         return calculateResponse;
