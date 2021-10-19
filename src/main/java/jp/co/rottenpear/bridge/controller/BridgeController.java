@@ -8,9 +8,7 @@ import jp.co.rottenpear.bridge.service.BridgeSimulatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.LinkedHashMap;
@@ -20,24 +18,13 @@ import java.util.Map;
 @Controller
 public class BridgeController {
 
-    public static int syncCount = 0;
-
-    public final static int syncLimit = 1;
 
     @Autowired
     BridgeSimulatorService bridgeSimulatorService;
 
     @GetMapping("/info")
     public String bridgeSimulator(Model model) {
-        Map<String, String> contractRanks = new LinkedHashMap<String, String>();
-
-        contractRanks.put("1", "1");
-        contractRanks.put("2", "2");
-        contractRanks.put("3", "3");
-        contractRanks.put("4", "4");
-        contractRanks.put("5", "5");
-        contractRanks.put("6", "6");
-        contractRanks.put("7", "7");
+        Map<String, String> contractRanks = getContractRanks();
 
         model.addAttribute("contractRanks", contractRanks);
         model.addAttribute("message", "欢迎来到桥牌模拟器");
@@ -171,13 +158,13 @@ public class BridgeController {
         }
         CalculateResponse calculateResponse = null;
         try {
-            if (syncCount >= syncLimit) {
+            if (BridgeSimulatorConfig.syncCount >= BridgeSimulatorConfig.syncLimit) {
                 resultMessage = "服务器繁忙，有其他用户正在使用，请稍后再试";
                 ModelAndView mv = new ModelAndView("bridgeSimulatorResult");
                 mv.addObject("resultMessage", resultMessage);
                 return mv;
             }
-            syncCount++;
+            BridgeSimulatorConfig.syncCount++;
             bridgeHand.setHcpFrom(String.valueOf(hcpFromInt));
             bridgeHand.setHcpTo(String.valueOf(hcpToInt));
             calculateResponse = bridgeSimulatorService.calculator(bridgeHand);
@@ -192,8 +179,8 @@ public class BridgeController {
             mv.addObject("resultMessage", resultMessage);
             return mv;
         } finally {
-            if (syncCount > 0) {
-                syncCount--;
+            if (BridgeSimulatorConfig.syncCount > 0) {
+                BridgeSimulatorConfig.syncCount--;
             }
         }
 
@@ -206,6 +193,18 @@ public class BridgeController {
         return mv;
     }
 
+    @RequestMapping(value = "/reset", method = RequestMethod.GET)
+    String reset() {
+
+        BridgeSimulatorConfig.syncCount = 0;
+        String testValue = "reset成功";
+        return testValue;
+    }
+
+    @RequestMapping(value = "/syncCount", method = RequestMethod.GET)
+    String syncCount() {
+        return  String.valueOf(BridgeSimulatorConfig.syncCount);
+    }
 
     private int calcHcp(String pbnCode) {
         int hcp = 0;
@@ -242,5 +241,16 @@ public class BridgeController {
         boolean isBanlanceHand = false;
         return isBanlanceHand;
     }
+    private Map<String, String> getContractRanks() {
+        Map<String, String> contractRanks = new LinkedHashMap<String, String>();
 
+        contractRanks.put("1", "1");
+        contractRanks.put("2", "2");
+        contractRanks.put("3", "3");
+        contractRanks.put("4", "4");
+        contractRanks.put("5", "5");
+        contractRanks.put("6", "6");
+        contractRanks.put("7", "7");
+        return contractRanks;
+    }
 }
