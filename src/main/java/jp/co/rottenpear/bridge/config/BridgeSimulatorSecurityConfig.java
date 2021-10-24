@@ -62,7 +62,7 @@ public class BridgeSimulatorSecurityConfig extends WebSecurityConfigurerAdapter 
                 .withUser("rottenpear").password(passwordEncoder().encode("ggl313")).roles("USER")
                 .and().withUser("flyingblue").password(passwordEncoder().encode("flyingblue2000")).roles("USER")
                 .and().withUser("7sf").password(passwordEncoder().encode("7sf2000")).roles("USER")
-                .and().withUser("discard").password(passwordEncoder().encode("discard2000")).roles("USER")
+                .and().withUser("discard").password(passwordEncoder().encode("discard1900")).roles("USER")
                 .and().withUser("flyingdance").password(passwordEncoder().encode("flyingdance2000")).roles("USER")
                 .and().withUser("zhuzi").password(passwordEncoder().encode("zhuzi2000")).roles("USER")
                 .and().withUser("usubmarine").password(passwordEncoder().encode("usubmarine2021")).roles("USER")

@@ -23,7 +23,7 @@ public class BridgeSimulatorService {
     //String npbnCode, String trump, String rank, int hcpFromInt, int hcpToInt,
     public CalculateResponse calculator(BridgeHand bridgeHand) {
 
-        String npbnCode = bridgeHand.getPbncode();
+        String npbnCode = bridgeHand.getPbncodeSpades()+"."+bridgeHand.getPbncodeHearts()+"."+bridgeHand.getPbncodeDiamonds()+"."+bridgeHand.getPbncodeClubs();
         String trump = bridgeHand.getContractTrumpX();
         int hcpFromInt = Integer.parseInt(bridgeHand.getHcpFrom());
         int hcpToInt = Integer.parseInt(bridgeHand.getHcpTo());

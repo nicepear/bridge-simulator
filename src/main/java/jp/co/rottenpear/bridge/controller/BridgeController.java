@@ -48,7 +48,7 @@ public class BridgeController {
 
         int hcpFromInt = 0;
         int hcpToInt = 0;
-        int hcp = calcHcp(bridgeHand.getPbncode());
+        int hcp = calcHcp(bridgeHand.getPbncodeSpades()+"."+bridgeHand.getPbncodeHearts()+"."+bridgeHand.getPbncodeDiamonds()+"."+bridgeHand.getPbncodeClubs());
         try {
             hcpFromInt = Integer.parseInt(hcpFrom);
             hcpToInt = Integer.parseInt(hcpTo);
@@ -194,6 +194,7 @@ public class BridgeController {
     }
 
     @RequestMapping(value = "/reset", method = RequestMethod.GET)
+    @ResponseBody
     String reset() {
 
         BridgeSimulatorConfig.syncCount = 0;
@@ -202,6 +203,7 @@ public class BridgeController {
     }
 
     @RequestMapping(value = "/syncCount", method = RequestMethod.GET)
+    @ResponseBody
     String syncCount() {
         return  String.valueOf(BridgeSimulatorConfig.syncCount);
     }

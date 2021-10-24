@@ -22,15 +22,45 @@ public class BridgeHand {
 
     private String contractTrumpX;
 
-    public String getPbncode() {
-        return pbncode;
+    private String pbncodeSpades;
+
+    private String pbncodeHearts;
+
+    private String pbncodeDiamonds;
+
+    public String getPbncodeSpades() {
+        return pbncodeSpades;
     }
 
-    public void setPbncode(String pbncode) {
-        this.pbncode = pbncode;
+    public void setPbncodeSpades(String pbncodeSpades) {
+        this.pbncodeSpades = pbncodeSpades;
     }
 
-    private String pbncode;
+    public String getPbncodeHearts() {
+        return pbncodeHearts;
+    }
+
+    public void setPbncodeHearts(String pbncodeHearts) {
+        this.pbncodeHearts = pbncodeHearts;
+    }
+
+    public String getPbncodeDiamonds() {
+        return pbncodeDiamonds;
+    }
+
+    public void setPbncodeDiamonds(String pbncodeDiamonds) {
+        this.pbncodeDiamonds = pbncodeDiamonds;
+    }
+
+    public String getPbncodeClubs() {
+        return pbncodeClubs;
+    }
+
+    public void setPbncodeClubs(String pbncodeClubs) {
+        this.pbncodeClubs = pbncodeClubs;
+    }
+
+    private String pbncodeClubs;
 
     private String hcpFrom;
 
