@@ -100,6 +100,43 @@ public class BridgeHand {
 
     private String partnerHandPattern;
 
+    private String pbncodeNorthSpades;
+    private String pbncodeNorthHearts;
+    private String pbncodeNorthDiamonds;
+    private String pbncodeNorthClubs;
+
+    public String getPbncodeNorthSpades() {
+        return pbncodeNorthSpades;
+    }
+
+    public void setPbncodeNorthSpades(String pbncodeNorthSpades) {
+        this.pbncodeNorthSpades = pbncodeNorthSpades;
+    }
+
+    public String getPbncodeNorthHearts() {
+        return pbncodeNorthHearts;
+    }
+
+    public void setPbncodeNorthHearts(String pbncodeNorthHearts) {
+        this.pbncodeNorthHearts = pbncodeNorthHearts;
+    }
+
+    public String getPbncodeNorthDiamonds() {
+        return pbncodeNorthDiamonds;
+    }
+
+    public void setPbncodeNorthDiamonds(String pbncodeNorthDiamonds) {
+        this.pbncodeNorthDiamonds = pbncodeNorthDiamonds;
+    }
+
+    public String getPbncodeNorthClubs() {
+        return pbncodeNorthClubs;
+    }
+
+    public void setPbncodeNorthClubs(String pbncodeNorthClubs) {
+        this.pbncodeNorthClubs = pbncodeNorthClubs;
+    }
+
     public String getPartnerHandPattern() {
         return partnerHandPattern;
     }

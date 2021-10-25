@@ -34,6 +34,7 @@ public class BridgeController {
     @PostMapping("/infoResult")
     public ModelAndView bridgeSimulatorResult(@ModelAttribute(value = "bridgeHand") BridgeHand bridgeHand, Model model) {
 
+
         String resultMessage = "";
 
         String hcpFrom = bridgeHand.getHcpFrom();
@@ -48,7 +49,7 @@ public class BridgeController {
 
         int hcpFromInt = 0;
         int hcpToInt = 0;
-        int hcp = calcHcp(bridgeHand.getPbncodeSpades()+"."+bridgeHand.getPbncodeHearts()+"."+bridgeHand.getPbncodeDiamonds()+"."+bridgeHand.getPbncodeClubs());
+        int hcp = calcHcp(bridgeHand.getPbncodeSpades() + "." + bridgeHand.getPbncodeHearts() + "." + bridgeHand.getPbncodeDiamonds() + "." + bridgeHand.getPbncodeClubs());
         try {
             hcpFromInt = Integer.parseInt(hcpFrom);
             hcpToInt = Integer.parseInt(hcpTo);
@@ -156,6 +157,15 @@ public class BridgeController {
                 }
             }
         }
+
+        //現時点このメソッドはパートナーのハンドをチェックするだけ
+        resultMessage = validationBridgeHand(bridgeHand);
+        if (!"".equals(resultMessage)) {
+            ModelAndView mv = new ModelAndView("bridgeSimulatorResult");
+            mv.addObject("resultMessage", resultMessage);
+            return mv;
+        }
+
         CalculateResponse calculateResponse = null;
         try {
             if (BridgeSimulatorConfig.syncCount >= BridgeSimulatorConfig.syncLimit) {
@@ -169,7 +179,7 @@ public class BridgeController {
             bridgeHand.setHcpTo(String.valueOf(hcpToInt));
             calculateResponse = bridgeSimulatorService.calculator(bridgeHand);
         } catch (Exception e) {
-            resultMessage = "抱歉，程序内部错误：" + e.getStackTrace();
+            resultMessage = "抱歉，程序内部错误：" +e.getMessage()+e.getStackTrace();
             ModelAndView mv = new ModelAndView("bridgeSimulatorResult");
             mv.addObject("resultMessage", resultMessage);
             return mv;
@@ -193,6 +203,7 @@ public class BridgeController {
         return mv;
     }
 
+
     @RequestMapping(value = "/reset", method = RequestMethod.GET)
     @ResponseBody
     String reset() {
@@ -205,7 +216,7 @@ public class BridgeController {
     @RequestMapping(value = "/syncCount", method = RequestMethod.GET)
     @ResponseBody
     String syncCount() {
-        return  String.valueOf(BridgeSimulatorConfig.syncCount);
+        return String.valueOf(BridgeSimulatorConfig.syncCount);
     }
 
     private int calcHcp(String pbnCode) {
@@ -236,6 +247,9 @@ public class BridgeController {
         if (Integer.parseInt(bridgeHand.getClubsLengthTo()) < 2 || Integer.parseInt(bridgeHand.getDiamondsLengthTo()) < 2 || Integer.parseInt(bridgeHand.getHeartsLengthTo()) < 2 || Integer.parseInt(bridgeHand.getSpadesLengthTo()) < 2) {
             return false;
         }
+        if (bridgeHand.getPbncodeNorthClubs().length() > 5 || bridgeHand.getPbncodeNorthDiamonds().length()  > 5 ||bridgeHand.getPbncodeNorthHearts().length()  > 5 || bridgeHand.getPbncodeNorthSpades().length() > 5) {
+            return false;
+        }
         return isBanlanceHand;
     }
 
@@ -243,6 +257,7 @@ public class BridgeController {
         boolean isBanlanceHand = false;
         return isBanlanceHand;
     }
+
     private Map<String, String> getContractRanks() {
         Map<String, String> contractRanks = new LinkedHashMap<String, String>();
 
@@ -254,5 +269,32 @@ public class BridgeController {
         contractRanks.put("6", "6");
         contractRanks.put("7", "7");
         return contractRanks;
+    }
+
+    private String validationBridgeHand(BridgeHand bridgeHand) {
+
+        String resultMessage = "";
+        String pbncodeNorthSpades = bridgeHand.getPbncodeNorthSpades();
+        String pbncodeNorthHearts = bridgeHand.getPbncodeNorthHearts();
+        String pbncodeNorthDiamonds = bridgeHand.getPbncodeNorthDiamonds();
+        String pbncodeNorthClubs = bridgeHand.getPbncodeNorthClubs();
+
+        if (pbncodeNorthSpades.length() > Integer.parseInt(bridgeHand.getSpadesLengthTo())) {
+            resultMessage = "黑桃张数设置错误";
+        } else if (pbncodeNorthHearts.length() > Integer.parseInt(bridgeHand.getHeartsLengthTo())) {
+            resultMessage = "红桃张数设置错误";
+        } else if (pbncodeNorthDiamonds.length() > Integer.parseInt(bridgeHand.getDiamondsLengthTo())) {
+            resultMessage = "方片张数设置错误";
+        } else if (pbncodeNorthClubs.length() > Integer.parseInt(bridgeHand.getClubsLengthTo())) {
+            resultMessage = "草花张数设置错误";
+        }
+
+        if("".equals(bridgeHand.getHcpTo())){
+            bridgeHand.setHcpTo("37");
+        }
+        if (calcHcp(pbncodeNorthClubs) + calcHcp(pbncodeNorthDiamonds) + calcHcp(pbncodeNorthHearts) + calcHcp(pbncodeNorthSpades) > Integer.parseInt(bridgeHand.getHcpTo())) {
+            resultMessage = "点力设置有误，请确认";
+        }
+        return resultMessage;
     }
 }

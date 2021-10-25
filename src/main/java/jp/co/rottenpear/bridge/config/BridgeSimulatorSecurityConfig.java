@@ -69,7 +69,8 @@ public class BridgeSimulatorSecurityConfig extends WebSecurityConfigurerAdapter 
                 .and().withUser("ninigege").password(passwordEncoder().encode("ninigege2021")).roles("USER")
                 .and().withUser("langzi").password(passwordEncoder().encode("langzi2000")).roles("USER")
                 .and().withUser("laolang").password(passwordEncoder().encode("laolang2000")).roles("USER")
-                .and().withUser("huida").password(passwordEncoder().encode("huida2000")).roles("USER");
+                .and().withUser("huida").password(passwordEncoder().encode("huida2000")).roles("USER")
+                .and().withUser("huizhang").password(passwordEncoder().encode("huizhang2000")).roles("USER");
 
 //        authenticationManagerBuilder.inMemoryAuthentication()
 //                .withUser("rottenpear").password("{noop}ggl313").roles("USER")

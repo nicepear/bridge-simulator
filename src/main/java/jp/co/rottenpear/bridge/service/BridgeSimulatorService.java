@@ -20,7 +20,6 @@ import java.util.List;
 @Service
 public class BridgeSimulatorService {
 
-    //String npbnCode, String trump, String rank, int hcpFromInt, int hcpToInt,
     public CalculateResponse calculator(BridgeHand bridgeHand) {
 
         String npbnCode = bridgeHand.getPbncodeSpades()+"."+bridgeHand.getPbncodeHearts()+"."+bridgeHand.getPbncodeDiamonds()+"."+bridgeHand.getPbncodeClubs();
@@ -168,6 +167,60 @@ public class BridgeSimulatorService {
             }
         }
 
+
+        String pbncodeNorthSpades=bridgeHand.getPbncodeNorthSpades();
+        String pbncodeNorthHearts=bridgeHand.getPbncodeNorthHearts();
+        String pbncodeNorthDiamonds=bridgeHand.getPbncodeNorthDiamonds();
+        String pbncodeNorthClubs=bridgeHand.getPbncodeNorthClubs();
+
+        if (pbncodeNorthSpades != null) {
+            for (int i = 0; i < pbncodeNorthSpades.length(); i++) {
+                SimpleCard existedCard = new SimpleCard();
+                existedCard.setSuit("S");
+                existedCard.setNumbdr(pbncodeNorthSpades.substring(i, i + 1));
+                if(existedCardList.contains(existedCard)){
+                    throw new RuntimeException("黑桃牌重复");
+                }
+                existedCardList.add(existedCard);
+            }
+        }
+
+        if (pbncodeNorthHearts != null) {
+            for (int i = 0; i < pbncodeNorthHearts.length(); i++) {
+                SimpleCard existedCard = new SimpleCard();
+                existedCard.setSuit("H");
+                existedCard.setNumbdr(pbncodeNorthHearts.substring(i, i + 1));
+                if(existedCardList.contains(existedCard)){
+                    throw new RuntimeException("红桃牌重复");
+                }
+                existedCardList.add(existedCard);
+            }
+        }
+
+        if (pbncodeNorthDiamonds != null) {
+            for (int i = 0; i < pbncodeNorthDiamonds.length(); i++) {
+                SimpleCard existedCard = new SimpleCard();
+                existedCard.setSuit("D");
+                existedCard.setNumbdr(pbncodeNorthDiamonds.substring(i, i + 1));
+                if(existedCardList.contains(existedCard)){
+                    throw new RuntimeException("方片牌重复");
+                }
+                existedCardList.add(existedCard);
+            }
+        }
+
+        if (pbncodeNorthClubs != null) {
+            for (int i = 0; i < pbncodeNorthClubs.length(); i++) {
+                SimpleCard existedCard = new SimpleCard();
+                existedCard.setSuit("C");
+                existedCard.setNumbdr(pbncodeNorthClubs.substring(i, i + 1));
+                if(existedCardList.contains(existedCard)){
+                    throw new RuntimeException("草花牌重复");
+                }
+                existedCardList.add(existedCard);
+            }
+        }
+
         for (SimpleCard existedCard : existedCardList) {
             cardList.remove(existedCard);
         }
@@ -221,11 +274,11 @@ public class BridgeSimulatorService {
 
         String whand = sortPbnCode(scode) + "." + sortPbnCode(hcode) + "." + sortPbnCode(dcode) + "." + sortPbnCode(ccode);
 
-        scode = "";
-        hcode = "";
-        dcode = "";
-        ccode = "";
-        for (int i = 26; i < 39; i++) {
+        scode = pbncodeNorthSpades;
+        hcode = pbncodeNorthHearts;
+        dcode = pbncodeNorthDiamonds;
+        ccode = pbncodeNorthClubs;
+        for (int i = 26; i < cardList.size(); i++) {
 
             if (cardList.get(i).getSuit().equals("S")) {
                 scode = scode + cardList.get(i).getNumbdr();
