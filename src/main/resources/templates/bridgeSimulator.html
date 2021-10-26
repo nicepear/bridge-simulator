@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <title>Bridge Simulator</title>
+  <!--
+  <link th:href="@{/css/style.css}" rel="stylesheet">
+  -->
 </head>
 <body>
 <h1 th:text="${message}"></h1>
@@ -26,39 +29,109 @@
     <input type="radio" name="contractTrumpX" value="S" >♠</input>
     <input type="radio" name="contractTrumpX" value="NT" >NT</input>
   </div>
-  <p>请设置自己手牌:(必须全部设置)</p>
-  手牌:♠<input id="pbncodeSpades" type="text" name="pbncodeSpades" value="AT5" size="13" maxlength="13"/>
   <br/>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;💗<input id="pbncodeHearts" type="text" name="pbncodeHearts" value="AJT" size="13" maxlength="13"/>
-  <br/>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🔸<input id="pbncodeDiamonds" type="text" name="pbncodeDiamonds" value="A632" size="13" maxlength="13"/>
-  <br/>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ensp;♣<input id="pbncodeClubs" type="text" name="pbncodeClubs" value="KJ7" size="13" maxlength="13"/>
+  <table th:border="3">
+    <thead>
+    <tr>
+      <th colspan="3" bgcolor="#e3f0fb"><font size="5" >各家手牌设置</font></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td></td>
+      <td>
+        <div>
+        <p>请设置同伴可能持有的手牌:</p>
+        手牌:♠<input id="pbncodeNorthSpades" type="text" name="pbncodeNorthSpades" value="" size="13" maxlength="13"/>
+        <br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;💗<input id="pbncodeNorthHearts" type="text" name="pbncodeNorthHearts" value="" size="13" maxlength="13"/>
+        <br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🔸<input id="pbncodeNorthDiamonds" type="text" name="pbncodeNorthDiamonds" value="" size="13" maxlength="13"/>
+        <br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ensp;♣<input id="pbncodeNorthClubs" type="text" name="pbncodeNorthClubs" value="" size="13" maxlength="13"/>
+        <p>请设定同伴点力范围 <input id="hcpFrom" type="text" name="hcpFrom" value="0" size="1" maxlength="2"/>～<input id="hcpTo" type="text" name="hcpTo" value="" size="1" maxlength="2"/></p>
+        <p>请设置同伴花色长度(左侧不能为空)</p>
+        <p>♠ <input id="spadesLengthFrom" type="text" name="spadesLengthFrom" value="0" size="1" maxlength="2"/>～<input id="spadesLengthTo" type="text" name="spadesLengthTo" value="" size="1" maxlength="2"/></p>
+        <p>💗<input id="heartsLengthFrom" type="text" name="heartsLengthFrom" value="0" size="1" maxlength="2"/>～<input id="heartsLengthTo" type="text" name="heartsLengthTo" value="" size="1" maxlength="2"/></p>
+        <p>🔸 <input id="diamondsLengthFrom" type="text" name="diamondsLengthFrom" value="0" size="1" maxlength="2"/>～<input id="diamondsLengthTo" type="text" name="diamondsLengthTo" value="" size="1" maxlength="2"/></p>
+        <p>♣ <input id="clubsLengthFrom" type="text" name="clubsLengthFrom" value="0" size="1" maxlength="2"/>～<input id="clubsLengthTo" type="text" name="clubsLengthTo" value="" size="1" maxlength="2"/>
 
-  <p>请设置同伴可能持有的手牌:</p>
-  手牌:♠<input id="pbncodeNorthSpades" type="text" name="pbncodeNorthSpades" value="" size="13" maxlength="13"/>
-  <br/>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;💗<input id="pbncodeNorthHearts" type="text" name="pbncodeNorthHearts" value="" size="13" maxlength="13"/>
-  <br/>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🔸<input id="pbncodeNorthDiamonds" type="text" name="pbncodeNorthDiamonds" value="" size="13" maxlength="13"/>
-  <br/>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ensp;♣<input id="pbncodeNorthClubs" type="text" name="pbncodeNorthClubs" value="" size="13" maxlength="13"/>
+        <p>请选择同伴手牌牌型</p>
+           <input type="radio" name="partnerHandPattern" value="ANY"   checked="checked" >任意牌型</input>
+          <input type="radio" name="partnerHandPattern" value="BALANCE" >平均牌型</input>
+          <input type="radio" name="partnerHandPattern" value="UNBALANCE" >非平均牌型</input>
+        </div>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>
+        <div>
+          <p>请设置西家可能持有的手牌:</p>
+          手牌:♠<input id="pbncodeWestSpades" type="text" name="pbncodeWestSpades" value="" size="13" maxlength="13"/>
+          <br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;💗<input id="pbncodeWestHearts" type="text" name="pbncodeWestHearts" value="" size="13" maxlength="13"/>
+          <br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🔸<input id="pbncodeWestDiamonds" type="text" name="pbncodeWestDiamonds" value="" size="13" maxlength="13"/>
+          <br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ensp;♣<input id="pbncodeWestClubs" type="text" name="pbncodeWestClubs" value="" size="13" maxlength="13"/>
+          <p>请设定西家点力范围 <input id="hcpFromWest" type="text" name="hcpFromWest" value="0" size="1" maxlength="2"/>～<input id="hcpToWest" type="text" name="hcpToWest" value="" size="1" maxlength="2"/></p>
+          <p>请设置西家花色长度(左侧不能为空)</p>
+          <p>♠ <input id="spadesLengthFromWest" type="text" name="spadesLengthFromWest" value="0" size="1" maxlength="2"/>～<input id="spadesLengthToWest" type="text" name="spadesLengthToWest" value="" size="1" maxlength="2"/></p>
+          <p>💗<input id="heartsLengthFromWest" type="text" name="heartsLengthFromWest" value="0" size="1" maxlength="2"/>～<input id="heartsLengthToWest" type="text" name="heartsLengthToWest" value="" size="1" maxlength="2"/></p>
+          <p>🔸 <input id="diamondsLengthFromWest" type="text" name="diamondsLengthFromWest" value="0" size="1" maxlength="2"/>～<input id="diamondsLengthToWest" type="text" name="diamondsLengthToWest" value="" size="1" maxlength="2"/></p>
+          <p>♣ <input id="clubsLengthFromWest" type="text" name="clubsLengthFromWest" value="0" size="1" maxlength="2"/>～<input id="clubsLengthToWest" type="text" name="clubsLengthToWest" value="" size="1" maxlength="2"/>
 
+          <p>请选择西家手牌牌型</p>
+          <input type="radio" name="partnerHandPatternWest" value="ANY"   checked="checked" >任意牌型</input>
+          <input type="radio" name="partnerHandPatternWest" value="BALANCE" >平均牌型</input>
+          <input type="radio" name="partnerHandPatternWest" value="UNBALANCE" >非平均牌型</input>
+        </div>
+      </td>
+      <td></td>
+      <td>
+        <div>
+          <p>请设置东家可能持有的手牌:</p>
+          手牌:♠<input id="pbncodeEastSpades" type="text" name="pbncodeEastSpades" value="" size="13" maxlength="13"/>
+          <br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;💗<input id="pbncodeEastHearts" type="text" name="pbncodeEastHearts" value="" size="13" maxlength="13"/>
+          <br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🔸<input id="pbncodeEastDiamonds" type="text" name="pbncodeEastDiamonds" value="" size="13" maxlength="13"/>
+          <br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ensp;♣<input id="pbncodeEastClubs" type="text" name="pbncodeEastClubs" value="" size="13" maxlength="13"/>
+          <p>请设定东家点力范围 <input id="hcpFromEast" type="text" name="hcpFromEast" value="0" size="1" maxlength="2"/>～<input id="hcpToEast" type="text" name="hcpToEast" value="" size="1" maxlength="2"/></p>
+          <p>请设置东家花色长度(左侧不能为空)</p>
+          <p>♠ <input id="spadesLengthFromEast" type="text" name="spadesLengthFromEast" value="0" size="1" maxlength="2"/>～<input id="spadesLengthToEast" type="text" name="spadesLengthToEast" value="" size="1" maxlength="2"/></p>
+          <p>💗<input id="heartsLengthFromEast" type="text" name="heartsLengthFromEast" value="0" size="1" maxlength="2"/>～<input id="heartsLengthToEast" type="text" name="heartsLengthToEast" value="" size="1" maxlength="2"/></p>
+          <p>🔸 <input id="diamondsLengthFromEast" type="text" name="diamondsLengthFromEast" value="0" size="1" maxlength="2"/>～<input id="diamondsLengthToEast" type="text" name="diamondsLengthToEast" value="" size="1" maxlength="2"/></p>
+          <p>♣ <input id="clubsLengthFromEast" type="text" name="clubsLengthFromEast" value="0" size="1" maxlength="2"/>～<input id="clubsLengthToEast" type="text" name="clubsLengthToEast" value="" size="1" maxlength="2"/>
 
-  <p>请设定同伴点力范围 <input id="hcpFrom" type="text" name="hcpFrom" value="0" size="1" maxlength="2"/>～<input id="hcpTo" type="text" name="hcpTo" value="" size="1" maxlength="2"/></p>
+          <p>请选择东家手牌牌型</p>
+          <input type="radio" name="partnerHandPatternEast" value="ANY"  checked="checked" >任意牌型</input>
+          <input type="radio" name="partnerHandPatternEast" value="BALANCE">平均牌型</input>
+          <input type="radio" name="partnerHandPatternEast" value="UNBALANCE" >非平均牌型</input>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <div>
+          <p>你坐南家请设置自己手牌:</p>
+          手牌:♠<input id="pbncodeSpades" type="text" name="pbncodeSpades" value="AT5" size="13" maxlength="13"/>
+          <br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;💗<input id="pbncodeHearts" type="text" name="pbncodeHearts" value="AJT" size="13" maxlength="13"/>
+          <br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🔸<input id="pbncodeDiamonds" type="text" name="pbncodeDiamonds" value="A632" size="13" maxlength="13"/>
+          <br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ensp;♣<input id="pbncodeClubs" type="text" name="pbncodeClubs" value="KJ7" size="13" maxlength="13"/>
+        </div>
+      </td>
+      <td></td>
+    </tr>
+    </tbody>
+  </table>
 
-  <p>请设置同伴花色长度(左侧不能为空)</p>
-  <p>♠ <input id="spadesLengthFrom" type="text" name="spadesLengthFrom" value="0" size="1" maxlength="2"/>～<input id="spadesLengthTo" type="text" name="spadesLengthTo" value="" size="1" maxlength="2"/></p>
-  <p>💗<input id="heartsLengthFrom" type="text" name="heartsLengthFrom" value="0" size="1" maxlength="2"/>～<input id="heartsLengthTo" type="text" name="heartsLengthTo" value="" size="1" maxlength="2"/></p>
-  <p>🔸 <input id="diamondsLengthFrom" type="text" name="diamondsLengthFrom" value="0" size="1" maxlength="2"/>～<input id="diamondsLengthTo" type="text" name="diamondsLengthTo" value="" size="1" maxlength="2"/></p>
-  <p>♣ <input id="clubsLengthFrom" type="text" name="clubsLengthFrom" value="0" size="1" maxlength="2"/>～<input id="clubsLengthTo" type="text" name="clubsLengthTo" value="" size="1" maxlength="2"/>
-
-  <p>请选择同伴手牌牌型</p>
-  <div>
-    <input type="radio" name="partnerHandPattern" value="ANY"   checked="checked" >任意牌型</input>
-    <input type="radio" name="partnerHandPattern" value="BALANCE" >平均牌型</input>
-    <input type="radio" name="partnerHandPattern" value="UNBALANCE" >非平均牌型</input>
-  </div>
   <p><input type="submit" value="模拟计算开始" />计算需要时间，请耐心等待不要重复按此按钮</p>
   <br/>
   <p><input type="reset" value="重置" /></p>

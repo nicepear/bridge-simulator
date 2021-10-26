@@ -36,138 +36,12 @@ public class BridgeController {
 
 
         String resultMessage = "";
-
-        String hcpFrom = bridgeHand.getHcpFrom();
-        String hcpTo = bridgeHand.getHcpTo();
-
-        if ("".equals(hcpFrom)) {
-            hcpFrom = "0";
-        }
-        if ("".equals(hcpTo)) {
-            hcpTo = "40";
-        }
-
-        int hcpFromInt = 0;
-        int hcpToInt = 0;
-        int hcp = calcHcp(bridgeHand.getPbncodeSpades() + "." + bridgeHand.getPbncodeHearts() + "." + bridgeHand.getPbncodeDiamonds() + "." + bridgeHand.getPbncodeClubs());
-        try {
-            hcpFromInt = Integer.parseInt(hcpFrom);
-            hcpToInt = Integer.parseInt(hcpTo);
-            if (hcpFromInt > hcpToInt) {
-                throw new RuntimeException();
-            }
-            if (hcpFromInt < 0 || hcpToInt < 0) {
-                throw new RuntimeException();
-            }
-            if (hcpFromInt < 2 && hcpToInt < hcpFromInt + 3) {
-                throw new RuntimeException();
-            }
-            if (hcpFromInt > 33 - hcp) {
-                throw new RuntimeException();
-            }
-        } catch (Exception e) {
-            resultMessage = "点力范围设置非法或设置过大或过小";
-            ModelAndView mv = new ModelAndView("bridgeSimulatorResult");
-            mv.addObject("resultMessage", resultMessage);
-            return mv;
-        }
-
-        if ("".equals(bridgeHand.getSpadesLengthTo())) {
-            bridgeHand.setSpadesLengthTo("13");
-        }
-        if ("".equals(bridgeHand.getHeartsLengthTo())) {
-            bridgeHand.setHeartsLengthTo("13");
-        }
-        if ("".equals(bridgeHand.getDiamondsLengthTo())) {
-            bridgeHand.setDiamondsLengthTo("13");
-        }
-        if ("".equals(bridgeHand.getClubsLengthTo())) {
-            bridgeHand.setClubsLengthTo("13");
-        }
-        int spadesLengthFrom = 0;
-        int spadesLengthTo = 0;
-        int heartsLengthFrom = 0;
-        int heartsLengthTo = 0;
-        int diamondsLengthFrom = 0;
-        int diamondsLengthTo = 0;
-        int clubsLengthFrom = 0;
-        int clubsLengthTo = 0;
-        try {
-            spadesLengthFrom = Integer.parseInt(bridgeHand.getSpadesLengthFrom());
-            spadesLengthTo = Integer.parseInt(bridgeHand.getSpadesLengthTo());
-            heartsLengthFrom = Integer.parseInt(bridgeHand.getHeartsLengthFrom());
-            heartsLengthTo = Integer.parseInt(bridgeHand.getHeartsLengthTo());
-            diamondsLengthFrom = Integer.parseInt(bridgeHand.getDiamondsLengthFrom());
-            diamondsLengthTo = Integer.parseInt(bridgeHand.getDiamondsLengthTo());
-            clubsLengthFrom = Integer.parseInt(bridgeHand.getClubsLengthFrom());
-            clubsLengthTo = Integer.parseInt(bridgeHand.getClubsLengthTo());
-            if (spadesLengthFrom < 0 || spadesLengthFrom > 9) {
-                throw new RuntimeException();
-            }
-            if (spadesLengthTo < 0 || spadesLengthTo < spadesLengthFrom) {
-                throw new RuntimeException();
-            }
-            if (heartsLengthFrom < 0 || heartsLengthFrom > 9) {
-                throw new RuntimeException();
-            }
-            if (heartsLengthTo < 0 || heartsLengthTo < heartsLengthFrom) {
-                throw new RuntimeException();
-            }
-            if (diamondsLengthFrom < 0 || diamondsLengthFrom > 9) {
-                throw new RuntimeException();
-            }
-            if (diamondsLengthTo < 0 || diamondsLengthTo < diamondsLengthFrom) {
-                throw new RuntimeException();
-            }
-            if (clubsLengthFrom < 0 || clubsLengthFrom > 9) {
-                throw new RuntimeException();
-            }
-            if (clubsLengthTo < 0 || diamondsLengthTo < diamondsLengthFrom) {
-                throw new RuntimeException();
-            }
-            if (spadesLengthFrom + heartsLengthFrom + diamondsLengthFrom + clubsLengthFrom > 13) {
-                throw new RuntimeException();
-            }
-            if (spadesLengthTo + heartsLengthTo + diamondsLengthTo + clubsLengthTo < 13) {
-                throw new RuntimeException();
-            }
-        } catch (Exception e) {
-            resultMessage = "花色长度设置非法或设置过大或过小";
-            ModelAndView mv = new ModelAndView("bridgeSimulatorResult");
-            mv.addObject("resultMessage", resultMessage);
-            return mv;
-        }
-
-        if (!"ANY".equals(bridgeHand.getPartnerHandPattern())) {
-            if ("UNBALANCE".equals(bridgeHand.getPartnerHandPattern())) {
-                if (checkUnBalanceHand(bridgeHand)) {
-                    resultMessage = "非平均牌型设置与花色张数设置有误";
-                    ModelAndView mv = new ModelAndView("bridgeSimulatorResult");
-                    mv.addObject("resultMessage", resultMessage);
-                    return mv;
-                }
-            } else {
-                if ("BALANCE".equals(bridgeHand.getPartnerHandPattern())) {
-                    if (!checkBalanceHand(bridgeHand)) {
-                        resultMessage = "平均牌型设置与花色张数设置有误";
-                        ModelAndView mv = new ModelAndView("bridgeSimulatorResult");
-                        mv.addObject("resultMessage", resultMessage);
-                        return mv;
-                    }
-                }
-            }
-        }
-
-        //現時点このメソッドはパートナーのハンドをチェックするだけ
-        resultMessage = validationBridgeHand(bridgeHand);
-        if (!"".equals(resultMessage)) {
-            ModelAndView mv = new ModelAndView("bridgeSimulatorResult");
-            mv.addObject("resultMessage", resultMessage);
-            return mv;
-        }
-
         CalculateResponse calculateResponse = null;
         try {
+            //現時点このメソッドはパートナーのハンドをチェックするだけ
+            validationBridgeHand(bridgeHand);
+
+
             if (BridgeSimulatorConfig.syncCount >= BridgeSimulatorConfig.syncLimit) {
                 resultMessage = "服务器繁忙，有其他用户正在使用，请稍后再试";
                 ModelAndView mv = new ModelAndView("bridgeSimulatorResult");
@@ -175,11 +49,9 @@ public class BridgeController {
                 return mv;
             }
             BridgeSimulatorConfig.syncCount++;
-            bridgeHand.setHcpFrom(String.valueOf(hcpFromInt));
-            bridgeHand.setHcpTo(String.valueOf(hcpToInt));
             calculateResponse = bridgeSimulatorService.calculator(bridgeHand);
         } catch (Exception e) {
-            resultMessage = "抱歉，程序内部错误：" +e.getMessage()+e.getStackTrace();
+            resultMessage = e.getMessage();
             ModelAndView mv = new ModelAndView("bridgeSimulatorResult");
             mv.addObject("resultMessage", resultMessage);
             return mv;
@@ -247,7 +119,35 @@ public class BridgeController {
         if (Integer.parseInt(bridgeHand.getClubsLengthTo()) < 2 || Integer.parseInt(bridgeHand.getDiamondsLengthTo()) < 2 || Integer.parseInt(bridgeHand.getHeartsLengthTo()) < 2 || Integer.parseInt(bridgeHand.getSpadesLengthTo()) < 2) {
             return false;
         }
-        if (bridgeHand.getPbncodeNorthClubs().length() > 5 || bridgeHand.getPbncodeNorthDiamonds().length()  > 5 ||bridgeHand.getPbncodeNorthHearts().length()  > 5 || bridgeHand.getPbncodeNorthSpades().length() > 5) {
+        if (bridgeHand.getPbncodeNorthClubs().length() > 5 || bridgeHand.getPbncodeNorthDiamonds().length() > 5 || bridgeHand.getPbncodeNorthHearts().length() > 5 || bridgeHand.getPbncodeNorthSpades().length() > 5) {
+            return false;
+        }
+        return isBanlanceHand;
+    }
+
+    private boolean checkBalanceHandEast(BridgeHand bridgeHand) {
+        boolean isBanlanceHand = true;
+        if (Integer.parseInt(bridgeHand.getClubsLengthFromEast()) > 5 || Integer.parseInt(bridgeHand.getDiamondsLengthFromEast()) > 5 || Integer.parseInt(bridgeHand.getHeartsLengthFromEast()) > 5 || Integer.parseInt(bridgeHand.getSpadesLengthFromEast()) > 5) {
+            return false;
+        }
+        if (Integer.parseInt(bridgeHand.getClubsLengthToEast()) < 2 || Integer.parseInt(bridgeHand.getDiamondsLengthToEast()) < 2 || Integer.parseInt(bridgeHand.getHeartsLengthToEast()) < 2 || Integer.parseInt(bridgeHand.getSpadesLengthToEast()) < 2) {
+            return false;
+        }
+        if (bridgeHand.getPbncodeEastClubs().length() > 5 || bridgeHand.getPbncodeEastDiamonds().length() > 5 || bridgeHand.getPbncodeEastHearts().length() > 5 || bridgeHand.getPbncodeEastSpades().length() > 5) {
+            return false;
+        }
+        return isBanlanceHand;
+    }
+
+    private boolean checkBalanceHandWest(BridgeHand bridgeHand) {
+        boolean isBanlanceHand = true;
+        if (Integer.parseInt(bridgeHand.getClubsLengthFromWest()) > 5 || Integer.parseInt(bridgeHand.getDiamondsLengthFromWest()) > 5 || Integer.parseInt(bridgeHand.getHeartsLengthFromWest()) > 5 || Integer.parseInt(bridgeHand.getSpadesLengthFromWest()) > 5) {
+            return false;
+        }
+        if (Integer.parseInt(bridgeHand.getClubsLengthToWest()) < 2 || Integer.parseInt(bridgeHand.getDiamondsLengthToWest()) < 2 || Integer.parseInt(bridgeHand.getHeartsLengthToWest()) < 2 || Integer.parseInt(bridgeHand.getSpadesLengthToWest()) < 2) {
+            return false;
+        }
+        if (bridgeHand.getPbncodeWestClubs().length() > 5 || bridgeHand.getPbncodeWestDiamonds().length() > 5 || bridgeHand.getPbncodeWestHearts().length() > 5 || bridgeHand.getPbncodeWestSpades().length() > 5) {
             return false;
         }
         return isBanlanceHand;
@@ -273,6 +173,9 @@ public class BridgeController {
 
     private String validationBridgeHand(BridgeHand bridgeHand) {
 
+        validationHCP(bridgeHand);
+        validationHCPEast(bridgeHand);
+        validationHCPWest(bridgeHand);
         String resultMessage = "";
         String pbncodeNorthSpades = bridgeHand.getPbncodeNorthSpades();
         String pbncodeNorthHearts = bridgeHand.getPbncodeNorthHearts();
@@ -280,21 +183,342 @@ public class BridgeController {
         String pbncodeNorthClubs = bridgeHand.getPbncodeNorthClubs();
 
         if (pbncodeNorthSpades.length() > Integer.parseInt(bridgeHand.getSpadesLengthTo())) {
-            resultMessage = "黑桃张数设置错误";
+            throw new RuntimeException("黑桃张数设置错误");
         } else if (pbncodeNorthHearts.length() > Integer.parseInt(bridgeHand.getHeartsLengthTo())) {
-            resultMessage = "红桃张数设置错误";
+            throw new RuntimeException("红桃张数设置错误");
         } else if (pbncodeNorthDiamonds.length() > Integer.parseInt(bridgeHand.getDiamondsLengthTo())) {
-            resultMessage = "方片张数设置错误";
+            throw new RuntimeException("方片张数设置错误");
         } else if (pbncodeNorthClubs.length() > Integer.parseInt(bridgeHand.getClubsLengthTo())) {
-            resultMessage = "草花张数设置错误";
+            throw new RuntimeException("草花张数设置错误");
         }
 
-        if("".equals(bridgeHand.getHcpTo())){
+        if ("".equals(bridgeHand.getHcpTo())) {
             bridgeHand.setHcpTo("37");
         }
         if (calcHcp(pbncodeNorthClubs) + calcHcp(pbncodeNorthDiamonds) + calcHcp(pbncodeNorthHearts) + calcHcp(pbncodeNorthSpades) > Integer.parseInt(bridgeHand.getHcpTo())) {
-            resultMessage = "点力设置有误，请确认";
+            throw new RuntimeException("点力设置有误，请确认");
         }
         return resultMessage;
+    }
+
+    private void validationHCP(BridgeHand bridgeHand) {
+        String hcpFrom = bridgeHand.getHcpFrom();
+        String hcpTo = bridgeHand.getHcpTo();
+
+        if ("".equals(hcpFrom)) {
+            hcpFrom = "0";
+        }
+        if ("".equals(hcpTo)) {
+            hcpTo = "40";
+        }
+
+        int hcpFromInt = 0;
+        int hcpToInt = 0;
+        int hcp = calcHcp(bridgeHand.getPbncodeSpades() + "." + bridgeHand.getPbncodeHearts() + "." + bridgeHand.getPbncodeDiamonds() + "." + bridgeHand.getPbncodeClubs());
+
+        hcpFromInt = Integer.parseInt(hcpFrom);
+        hcpToInt = Integer.parseInt(hcpTo);
+        bridgeHand.setHcpFrom(String.valueOf(hcpFromInt));
+        bridgeHand.setHcpTo(String.valueOf(hcpToInt));
+        if (hcpFromInt > hcpToInt) {
+            throw new RuntimeException("点力范围设置非法或设置过大或过小");
+        }
+        if (hcpFromInt < 0 || hcpToInt < 0) {
+            throw new RuntimeException("点力范围设置非法或设置过大或过小");
+        }
+        if (hcpFromInt < 2 && hcpToInt < hcpFromInt + 3) {
+            throw new RuntimeException("点力范围设置非法或设置过大或过小");
+        }
+        if (hcpFromInt > 33 - hcp) {
+            throw new RuntimeException("点力范围设置非法或设置过大或过小");
+        }
+
+        if ("".equals(bridgeHand.getSpadesLengthTo())) {
+            bridgeHand.setSpadesLengthTo("13");
+        }
+        if ("".equals(bridgeHand.getHeartsLengthTo())) {
+            bridgeHand.setHeartsLengthTo("13");
+        }
+        if ("".equals(bridgeHand.getDiamondsLengthTo())) {
+            bridgeHand.setDiamondsLengthTo("13");
+        }
+        if ("".equals(bridgeHand.getClubsLengthTo())) {
+            bridgeHand.setClubsLengthTo("13");
+        }
+        int spadesLengthFrom = 0;
+        int spadesLengthTo = 0;
+        int heartsLengthFrom = 0;
+        int heartsLengthTo = 0;
+        int diamondsLengthFrom = 0;
+        int diamondsLengthTo = 0;
+        int clubsLengthFrom = 0;
+        int clubsLengthTo = 0;
+        spadesLengthFrom = Integer.parseInt(bridgeHand.getSpadesLengthFrom());
+        spadesLengthTo = Integer.parseInt(bridgeHand.getSpadesLengthTo());
+        heartsLengthFrom = Integer.parseInt(bridgeHand.getHeartsLengthFrom());
+        heartsLengthTo = Integer.parseInt(bridgeHand.getHeartsLengthTo());
+        diamondsLengthFrom = Integer.parseInt(bridgeHand.getDiamondsLengthFrom());
+        diamondsLengthTo = Integer.parseInt(bridgeHand.getDiamondsLengthTo());
+        clubsLengthFrom = Integer.parseInt(bridgeHand.getClubsLengthFrom());
+        clubsLengthTo = Integer.parseInt(bridgeHand.getClubsLengthTo());
+        if (spadesLengthFrom < 0 || spadesLengthFrom > 9) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (spadesLengthTo < 0 || spadesLengthTo < spadesLengthFrom) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (heartsLengthFrom < 0 || heartsLengthFrom > 9) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (heartsLengthTo < 0 || heartsLengthTo < heartsLengthFrom) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (diamondsLengthFrom < 0 || diamondsLengthFrom > 9) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (diamondsLengthTo < 0 || diamondsLengthTo < diamondsLengthFrom) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (clubsLengthFrom < 0 || clubsLengthFrom > 9) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (clubsLengthTo < 0 || diamondsLengthTo < diamondsLengthFrom) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (spadesLengthFrom + heartsLengthFrom + diamondsLengthFrom + clubsLengthFrom > 13) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (spadesLengthTo + heartsLengthTo + diamondsLengthTo + clubsLengthTo < 13) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+
+
+        if (!"ANY".equals(bridgeHand.getPartnerHandPattern())) {
+            if ("UNBALANCE".equals(bridgeHand.getPartnerHandPattern())) {
+                if (checkUnBalanceHand(bridgeHand)) {
+                    throw new RuntimeException("非平均牌型设置与花色张数设置有误");
+                }
+            } else {
+                if ("BALANCE".equals(bridgeHand.getPartnerHandPattern())) {
+                    if (!checkBalanceHand(bridgeHand)) {
+                        throw new RuntimeException("平均牌型设置与花色张数设置有误");
+                    }
+                }
+            }
+        }
+    }
+
+    private void validationHCPEast(BridgeHand bridgeHand) {
+        String hcpFrom = bridgeHand.getHcpFromEast();
+        String hcpTo = bridgeHand.getHcpToEast();
+
+        if ("".equals(hcpFrom)) {
+            hcpFrom = "0";
+        }
+        if ("".equals(hcpTo)) {
+            hcpTo = "40";
+        }
+
+        int hcpFromInt = 0;
+        int hcpToInt = 0;
+        int hcp = calcHcp(bridgeHand.getPbncodeEastSpades() + "." + bridgeHand.getPbncodeEastHearts() + "." + bridgeHand.getPbncodeEastDiamonds() + "." + bridgeHand.getPbncodeEastClubs());
+
+        hcpFromInt = Integer.parseInt(hcpFrom);
+        hcpToInt = Integer.parseInt(hcpTo);
+        bridgeHand.setHcpFromEast(String.valueOf(hcpFromInt));
+        bridgeHand.setHcpToEast(String.valueOf(hcpToInt));
+        if (hcpFromInt > hcpToInt) {
+            throw new RuntimeException("点力范围设置非法或设置过大或过小");
+        }
+        if (hcpFromInt < 0 || hcpToInt < 0) {
+            throw new RuntimeException("点力范围设置非法或设置过大或过小");
+        }
+        if (hcpFromInt < 2 && hcpToInt < hcpFromInt + 3) {
+            throw new RuntimeException("点力范围设置非法或设置过大或过小");
+        }
+        if (hcpFromInt > 33 - hcp) {
+            throw new RuntimeException("点力范围设置非法或设置过大或过小");
+        }
+
+        if ("".equals(bridgeHand.getSpadesLengthToEast())) {
+            bridgeHand.setSpadesLengthToEast("13");
+        }
+        if ("".equals(bridgeHand.getHeartsLengthToEast())) {
+            bridgeHand.setHeartsLengthToEast("13");
+        }
+        if ("".equals(bridgeHand.getDiamondsLengthToEast())) {
+            bridgeHand.setDiamondsLengthToEast("13");
+        }
+        if ("".equals(bridgeHand.getClubsLengthToEast())) {
+            bridgeHand.setClubsLengthToEast("13");
+        }
+        int spadesLengthFrom = 0;
+        int spadesLengthTo = 0;
+        int heartsLengthFrom = 0;
+        int heartsLengthTo = 0;
+        int diamondsLengthFrom = 0;
+        int diamondsLengthTo = 0;
+        int clubsLengthFrom = 0;
+        int clubsLengthTo = 0;
+        spadesLengthFrom = Integer.parseInt(bridgeHand.getSpadesLengthFromEast());
+        spadesLengthTo = Integer.parseInt(bridgeHand.getSpadesLengthToEast());
+        heartsLengthFrom = Integer.parseInt(bridgeHand.getHeartsLengthFromEast());
+        heartsLengthTo = Integer.parseInt(bridgeHand.getHeartsLengthToEast());
+        diamondsLengthFrom = Integer.parseInt(bridgeHand.getDiamondsLengthFromEast());
+        diamondsLengthTo = Integer.parseInt(bridgeHand.getDiamondsLengthToEast());
+        clubsLengthFrom = Integer.parseInt(bridgeHand.getClubsLengthFromEast());
+        clubsLengthTo = Integer.parseInt(bridgeHand.getClubsLengthToEast());
+        if (spadesLengthFrom < 0 || spadesLengthFrom > 9) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (spadesLengthTo < 0 || spadesLengthTo < spadesLengthFrom) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (heartsLengthFrom < 0 || heartsLengthFrom > 9) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (heartsLengthTo < 0 || heartsLengthTo < heartsLengthFrom) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (diamondsLengthFrom < 0 || diamondsLengthFrom > 9) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (diamondsLengthTo < 0 || diamondsLengthTo < diamondsLengthFrom) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (clubsLengthFrom < 0 || clubsLengthFrom > 9) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (clubsLengthTo < 0 || diamondsLengthTo < diamondsLengthFrom) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (spadesLengthFrom + heartsLengthFrom + diamondsLengthFrom + clubsLengthFrom > 13) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (spadesLengthTo + heartsLengthTo + diamondsLengthTo + clubsLengthTo < 13) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+
+
+        if (!"ANY".equals(bridgeHand.getPartnerHandPatternEast())) {
+            if ("UNBALANCE".equals(bridgeHand.getPartnerHandPatternEast())) {
+                if (checkUnBalanceHand(bridgeHand)) {
+                    throw new RuntimeException("非平均牌型设置与花色张数设置有误");
+                }
+            } else {
+                if ("BALANCE".equals(bridgeHand.getPartnerHandPatternEast())) {
+                    if (!checkBalanceHandEast(bridgeHand)) {
+                        throw new RuntimeException("平均牌型设置与花色张数设置有误");
+                    }
+                }
+            }
+        }
+    }
+
+    private void validationHCPWest(BridgeHand bridgeHand) {
+        String hcpFrom = bridgeHand.getHcpFromWest();
+        String hcpTo = bridgeHand.getHcpToWest();
+
+        if ("".equals(hcpFrom)) {
+            hcpFrom = "0";
+        }
+        if ("".equals(hcpTo)) {
+            hcpTo = "40";
+        }
+
+        int hcpFromInt = 0;
+        int hcpToInt = 0;
+        int hcp = calcHcp(bridgeHand.getPbncodeWestSpades() + "." + bridgeHand.getPbncodeWestHearts() + "." + bridgeHand.getPbncodeWestDiamonds() + "." + bridgeHand.getPbncodeWestClubs());
+
+        hcpFromInt = Integer.parseInt(hcpFrom);
+        hcpToInt = Integer.parseInt(hcpTo);
+        bridgeHand.setHcpFromWest(String.valueOf(hcpFromInt));
+        bridgeHand.setHcpToWest(String.valueOf(hcpToInt));
+        if (hcpFromInt > hcpToInt) {
+            throw new RuntimeException("点力范围设置非法或设置过大或过小");
+        }
+        if (hcpFromInt < 0 || hcpToInt < 0) {
+            throw new RuntimeException("点力范围设置非法或设置过大或过小");
+        }
+        if (hcpFromInt < 2 && hcpToInt < hcpFromInt + 3) {
+            throw new RuntimeException("点力范围设置非法或设置过大或过小");
+        }
+        if (hcpFromInt > 33 - hcp) {
+            throw new RuntimeException("点力范围设置非法或设置过大或过小");
+        }
+
+        if ("".equals(bridgeHand.getSpadesLengthToWest())) {
+            bridgeHand.setSpadesLengthToWest("13");
+        }
+        if ("".equals(bridgeHand.getHeartsLengthToWest())) {
+            bridgeHand.setHeartsLengthToWest("13");
+        }
+        if ("".equals(bridgeHand.getDiamondsLengthToWest())) {
+            bridgeHand.setDiamondsLengthToWest("13");
+        }
+        if ("".equals(bridgeHand.getClubsLengthToWest())) {
+            bridgeHand.setClubsLengthToWest("13");
+        }
+        int spadesLengthFrom = 0;
+        int spadesLengthTo = 0;
+        int heartsLengthFrom = 0;
+        int heartsLengthTo = 0;
+        int diamondsLengthFrom = 0;
+        int diamondsLengthTo = 0;
+        int clubsLengthFrom = 0;
+        int clubsLengthTo = 0;
+        spadesLengthFrom = Integer.parseInt(bridgeHand.getSpadesLengthFromWest());
+        spadesLengthTo = Integer.parseInt(bridgeHand.getSpadesLengthToWest());
+        heartsLengthFrom = Integer.parseInt(bridgeHand.getHeartsLengthFromWest());
+        heartsLengthTo = Integer.parseInt(bridgeHand.getHeartsLengthToWest());
+        diamondsLengthFrom = Integer.parseInt(bridgeHand.getDiamondsLengthFromWest());
+        diamondsLengthTo = Integer.parseInt(bridgeHand.getDiamondsLengthToWest());
+        clubsLengthFrom = Integer.parseInt(bridgeHand.getClubsLengthFromWest());
+        clubsLengthTo = Integer.parseInt(bridgeHand.getClubsLengthToWest());
+        if (spadesLengthFrom < 0 || spadesLengthFrom > 9) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (spadesLengthTo < 0 || spadesLengthTo < spadesLengthFrom) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (heartsLengthFrom < 0 || heartsLengthFrom > 9) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (heartsLengthTo < 0 || heartsLengthTo < heartsLengthFrom) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (diamondsLengthFrom < 0 || diamondsLengthFrom > 9) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (diamondsLengthTo < 0 || diamondsLengthTo < diamondsLengthFrom) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (clubsLengthFrom < 0 || clubsLengthFrom > 9) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (clubsLengthTo < 0 || diamondsLengthTo < diamondsLengthFrom) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (spadesLengthFrom + heartsLengthFrom + diamondsLengthFrom + clubsLengthFrom > 13) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+        if (spadesLengthTo + heartsLengthTo + diamondsLengthTo + clubsLengthTo < 13) {
+            throw new RuntimeException("花色长度设置非法或设置过大或过小");
+        }
+
+
+        if (!"ANY".equals(bridgeHand.getPartnerHandPatternWest())) {
+            if ("UNBALANCE".equals(bridgeHand.getPartnerHandPatternWest())) {
+                if (checkUnBalanceHand(bridgeHand)) {
+                    throw new RuntimeException("非平均牌型设置与花色张数设置有误");
+                }
+            } else {
+                if ("BALANCE".equals(bridgeHand.getPartnerHandPatternWest())) {
+                    if (!checkBalanceHandWest(bridgeHand)) {
+                        throw new RuntimeException("平均牌型设置与花色张数设置有误");
+                    }
+                }
+            }
+        }
     }
 }

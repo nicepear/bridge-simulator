@@ -7,4 +7,6 @@ public class BridgeSimulatorConfig {
     public static int syncCount = 0;
 
     public final static int syncLimit = 1;
+
+    public static int calculateCount = 1000;
 }
