@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 @SpringBootApplication
-public class SpringBootTesterApplication {
+public class BridgeSimulator {
 
     static {
         java.security.Security.setProperty("networkaddress.cache.ttl", "0");
@@ -13,7 +13,7 @@ public class SpringBootTesterApplication {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringBootTesterApplication.class, args);
+        SpringApplication.run(BridgeSimulator.class, args);
     }
 
 }
