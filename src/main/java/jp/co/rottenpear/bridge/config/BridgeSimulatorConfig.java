@@ -9,4 +9,6 @@ public class BridgeSimulatorConfig {
     public final static int syncLimit = 1;
 
     public static int calculateCount = 1000;
+
+    public static ThreadLocal<String> threadLocal = new ThreadLocal<String>();
 }

@@ -46,6 +46,7 @@ public class BridgeController {
                 resultMessage = "服务器繁忙，有其他用户正在使用，请稍后再试";
                 ModelAndView mv = new ModelAndView("bridgeSimulatorResult");
                 mv.addObject("resultMessage", resultMessage);
+                BridgeSimulatorConfig.threadLocal.set("true");
                 return mv;
             }
             BridgeSimulatorConfig.syncCount++;
@@ -61,9 +62,10 @@ public class BridgeController {
             mv.addObject("resultMessage", resultMessage);
             return mv;
         } finally {
-            if (BridgeSimulatorConfig.syncCount > 0) {
+            if (BridgeSimulatorConfig.syncCount > 0 && !"true".equals(BridgeSimulatorConfig.threadLocal.get())) {
                 BridgeSimulatorConfig.syncCount--;
             }
+            BridgeSimulatorConfig.threadLocal.remove();
         }
 
         List<Hand> calcResults = calculateResponse.getCalculateResults();

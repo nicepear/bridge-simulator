@@ -64,6 +64,8 @@ public class BridgeSimulatorService {
                 contracts = dds.calcMakableContracts(pbnCode);
             } catch (DDSException e) {
                 e.printStackTrace();
+                dds=null;
+                throw new RuntimeException("can not generate dds");
             }
 
 
@@ -97,6 +99,7 @@ public class BridgeSimulatorService {
         probability = makecount * 100 / BridgeSimulatorConfig.gamecount;
         calculateResponse.setCalculateResults(calcResult);
         calculateResponse.setProbably(String.valueOf(probability));
+        dds=null;
         return calculateResponse;
 
     }
