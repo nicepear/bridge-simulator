@@ -11,6 +11,7 @@ import jp.co.rottenpear.bridge.model.Hand;
 import ddsjava.dto.SimpleCard;
 import jp.co.rottenpear.bridge.model.BridgeCardCompare;
 import jp.co.rottenpear.bridge.model.BridgeHand;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,6 +22,9 @@ import java.util.List;
 public class BridgeSimulatorService {
 
     private int calcCont = 0;
+
+    @Autowired
+    DDSConnect ddsConnect;
 
     public CalculateResponse calculator(BridgeHand bridgeHand) {
 
@@ -53,19 +57,14 @@ public class BridgeSimulatorService {
         List<Contract> contracts = null;
 
 
-        DDSConnect dds = new DDSConnect();
-
-
         for (int i = 0; i < BridgeSimulatorConfig.gamecount; i++) {
-            calcCont=0;
+            calcCont = 0;
             String pbnCode = generateRemainHandsEasy(bridgeHand);
 
             try {
-                contracts = dds.calcMakableContracts(pbnCode);
+                contracts = ddsConnect.calcMakableContracts(pbnCode);
             } catch (DDSException e) {
-                e.printStackTrace();
-                dds=null;
-                throw new RuntimeException("can not generate dds");
+                throw new RuntimeException("卡牌输入有误，请仔细确认");
             }
 
 
@@ -99,7 +98,6 @@ public class BridgeSimulatorService {
         probability = makecount * 100 / BridgeSimulatorConfig.gamecount;
         calculateResponse.setCalculateResults(calcResult);
         calculateResponse.setProbably(String.valueOf(probability));
-        dds=null;
         return calculateResponse;
 
     }
@@ -123,7 +121,6 @@ public class BridgeSimulatorService {
     private boolean checkIfBanlancedHand(String nhand) {
         boolean ifBanlancedHand = false;
         String pattern = getHandPattern(nhand);
-//        System.out.println(pattern);
         if ("2335".equals(pattern) || "2344".equals(pattern) || "3334".equals(pattern)) {
             ifBanlancedHand = true;
         }

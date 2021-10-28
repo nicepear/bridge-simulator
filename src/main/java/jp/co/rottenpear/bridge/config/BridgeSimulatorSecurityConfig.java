@@ -1,5 +1,6 @@
 package jp.co.rottenpear.bridge.config;
 
+import ddsjava.DDSConnect;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -90,5 +91,10 @@ public class BridgeSimulatorSecurityConfig extends WebSecurityConfigurerAdapter 
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    DDSConnect ddsConnect() {
+        return new DDSConnect();
     }
 }

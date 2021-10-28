@@ -1,6 +1,7 @@
 package jp.co.rottenpear.bridge.controller;
 
 import ddsjava.dto.CalculateResponse;
+import ddsjava.dto.SimpleCard;
 import jp.co.rottenpear.bridge.config.BridgeSimulatorConfig;
 import jp.co.rottenpear.bridge.model.Hand;
 import jp.co.rottenpear.bridge.model.BridgeHand;
@@ -11,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -175,6 +177,7 @@ public class BridgeController {
 
     private String validationBridgeHand(BridgeHand bridgeHand) {
 
+        checkHand(bridgeHand);
         validationHCP(bridgeHand);
         validationHCPEast(bridgeHand);
         validationHCPWest(bridgeHand);
@@ -520,6 +523,41 @@ public class BridgeController {
                         throw new RuntimeException("平均牌型设置与花色张数设置有误");
                     }
                 }
+            }
+        }
+    }
+
+    private void checkHand(BridgeHand bridgeHand) {
+        checkSuits(bridgeHand.getPbncodeClubs());
+        checkSuits(bridgeHand.getPbncodeDiamonds());
+        checkSuits(bridgeHand.getPbncodeHearts());
+        checkSuits(bridgeHand.getPbncodeSpades());
+        checkSuits(bridgeHand.getPbncodeClubs());
+        checkSuits(bridgeHand.getPbncodeEastClubs());
+        checkSuits(bridgeHand.getPbncodeEastDiamonds());
+        checkSuits(bridgeHand.getPbncodeEastHearts());
+        checkSuits(bridgeHand.getPbncodeEastSpades());
+        checkSuits(bridgeHand.getPbncodeWestClubs());
+        checkSuits(bridgeHand.getPbncodeWestDiamonds());
+        checkSuits(bridgeHand.getPbncodeWestHearts());
+        checkSuits(bridgeHand.getPbncodeWestSpades());
+        checkSuits(bridgeHand.getPbncodeNorthSpades());
+        checkSuits(bridgeHand.getPbncodeNorthHearts());
+        checkSuits(bridgeHand.getPbncodeNorthDiamonds());
+        checkSuits(bridgeHand.getPbncodeNorthClubs());
+    }
+
+    private void checkSuits(String suits) {
+        List<String> tmpList = new ArrayList<String>();
+        if (suits != null) {
+            for (int i = 0; i < suits.length(); i++) {
+                if (!BridgeSimulatorConfig.numberList.contains(suits.substring(i, i + 1))) {
+                    throw new RuntimeException("卡牌设置错误，请仔细确认");
+                }
+                if (tmpList.contains(suits.substring(i, i + 1))) {
+                    throw new RuntimeException("卡牌设置重复，请仔细确认");
+                }
+                tmpList.add(suits.substring(i, i + 1));
             }
         }
     }
